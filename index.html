@@ -1,0 +1,518 @@
+﻿<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Το Καλύτερο Ραδιόφωνο</title>
+
+    <!-- ─── Glassmorphic UI CSS (unchanged) ───────────────────────────────── -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        .radio-container {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            text-align: center;
+            min-width: 400px;
+            max-width: 500px;
+        }
+
+        .radio-title {
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            font-weight: 300;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .status-box {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            border-left: 4px solid #4CAF50;
+        }
+
+            .status-box.error {
+                border-left-color: #f44336;
+            }
+
+            .status-box.warning {
+                border-left-color: #ff9800;
+            }
+
+        .song-info {
+            margin: 30px 0;
+        }
+
+        .song-title {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .song-artist {
+            font-size: 1.1em;
+            opacity: 0.8;
+        }
+
+        .play-button {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            border: none;
+            color: white;
+            font-size: 2em;
+            cursor: pointer;
+            margin: 20px 0;
+            transition: transform 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px auto;
+        }
+
+            .play-button:hover {
+                transform: scale(1.1);
+            }
+
+            .play-button:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+
+        .volume-control {
+            margin: 30px 0;
+        }
+
+        .volume-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .volume-slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(255,255,255,0.3);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+            .volume-slider::-webkit-slider-thumb {
+                -webkit-appearance: none;
+                appearance: none;
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                background: white;
+                cursor: pointer;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            }
+
+            .volume-slider::-moz-range-thumb {
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                background: white;
+                cursor: pointer;
+                border: none;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            }
+
+        .playlist-info {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        .sync-info {
+            font-size: 0.9em;
+            opacity: 0.7;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 2px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4ECDC4, #44A08D);
+            border-radius: 2px;
+            transition: width 0.1s linear;
+            width: 0%;
+        }
+
+        .time-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+
+        .test-buttons {
+            margin: 20px 0;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .test-btn {
+            padding: 5px 10px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+
+            .test-btn:hover {
+                background: rgba(255,255,255,0.3);
+            }
+    </style>
+</head>
+
+<body>
+    <div class="radio-container">
+        <h1 class="radio-title">Το Καλύτερο Ραδιόφωνο</h1>
+
+        <!-- STATUS BOX -->
+        <div id="status" class="status-box">
+            <div class="loading"></div>
+            Σύνδεση...
+        </div>
+
+        <!-- SONG INFO (Initially Hidden) -->
+        <div id="song-info" class="song-info hidden">
+            <div class="song-title" id="song-title">Κανένα τραγούδι</div>
+            <div class="song-artist" id="song-artist"></div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <div class="time-info">
+                <span id="current-time">0:00</span>
+                <span id="total-time">0:00</span>
+            </div>
+        </div>
+
+        <!-- PLAY / PAUSE BUTTON -->
+        <button id="play-button" class="play-button" disabled>▶️</button>
+
+        <!-- VOLUME CONTROL -->
+        <div class="volume-control">
+            <div class="volume-label">
+                🔊 Ένταση: <span id="volume-value">50</span>%
+            </div>
+            <input type="range" id="volume-slider" class="volume-slider" min="0" max="100" value="50" />
+        </div>
+
+        <!-- PLAYLIST INFO (Current/Total Count) -->
+        <div id="playlist-info" class="playlist-info">
+            Φόρτωση λίστας αναπαραγωγής...
+        </div>
+
+        <!-- SYNC INFO (Client‐Side) -->
+        <div class="sync-info">
+            🌐 Συγχρονισμένο τοπικά
+        </div>
+    </div>
+
+    <!-- HIDDEN AUDIO ELEMENT -->
+    <audio id="audio-player" preload="metadata" crossorigin="anonymous"></audio>
+
+    <!-- ─── Client‐Side JavaScript (Static Synchronized Radio) ─────────────── -->
+    <script>
+        class RadioClient {
+            constructor() {
+                // ─── 1) LIST YOUR SONGS HERE ───────────────────────────────────────────
+                //   For every MP3 in /music/, add an object with:
+                //   { filename: "<exact name>.mp3", duration: <length in seconds> }
+                this.SONGS = [
+                    { filename: "Brain Damage.mp3", duration: 185 },
+                    { filename: "Kill You.mp3", duration: 200 },
+                    { filename: "Like Him.mp3", duration: 210 },
+                    { filename: "See You Again.mp3", duration: 240 }
+                    // …for each MP3 you have in the /music folder…
+                ];
+
+                // ─── 2) FIXED EPOCH (“RADIO STARTED” UTC millis) ─────────────────────
+                //   Use a date in the past so elapsed always ≥ 0. Example: Jan 1 2025 00:00 UTC:
+                this.RADIO_START_EPOCH = 1704067200000;
+
+                // ─── Internal References ────────────────────────────────────────────
+                this.audio = document.getElementById("audio-player");
+                this.statusEl = document.getElementById("status");
+                this.songInfoEl = document.getElementById("song-info");
+                this.songTitleEl = document.getElementById("song-title");
+                this.songArtistEl = document.getElementById("song-artist");
+                this.playButtonEl = document.getElementById("play-button");
+                this.volumeSliderEl = document.getElementById("volume-slider");
+                this.volumeValueEl = document.getElementById("volume-value");
+                this.playlistInfoEl = document.getElementById("playlist-info");
+                this.progressFillEl = document.getElementById("progress-fill");
+                this.currentTimeEl = document.getElementById("current-time");
+                this.totalTimeEl = document.getElementById("total-time");
+
+                this.playlist = [];       // will hold a shuffled copy of SONGS
+                this.currentIndex = 0;    // index into playlist
+                this.progressTimer = null;
+
+                this.initializeElements();
+                this.setupAudioEvents();
+                this.createShuffledPlaylist();  // shuffle now
+                this.syncAndStart();            // figure out “where to begin”
+            }
+
+            initializeElements() {
+                // Play/Pause button
+                this.playButtonEl.addEventListener("click", () => {
+                    this.togglePlay();
+                });
+                // Volume slider
+                this.volumeSliderEl.addEventListener("input", (e) => {
+                    this.changeVolume(parseInt(e.target.value));
+                });
+            }
+
+            setupAudioEvents() {
+                // When metadata loads, show duration & enable playback
+                this.audio.addEventListener("loadedmetadata", () => {
+                    this.totalTimeEl.textContent = this.formatTime(this.audio.duration);
+                    this.updateStatus("Σε αναπαραγωγή", "success");
+                    this.playButtonEl.disabled = false;
+                    this.songInfoEl.classList.remove("hidden");
+                });
+
+                // Update progress bar every 500ms while playing
+                this.audio.addEventListener("play", () => {
+                    this.playButtonEl.textContent = "⏸️";
+                    this.startProgressUpdater();
+                });
+                this.audio.addEventListener("pause", () => {
+                    this.playButtonEl.textContent = "▶️";
+                    this.stopProgressUpdater();
+                });
+
+                // When a track ends locally, go to the next track
+                this.audio.addEventListener("ended", () => {
+                    this.nextSong();
+                });
+            }
+
+            // ─── 3) SHUFFLE SONGS DETERMINISTICALLY (so everyone gets same order) ─────
+            createShuffledPlaylist() {
+                const seed = this.RADIO_START_EPOCH >>> 0; // 32-bit integer seed
+                function lcg(a) {
+                    return function () {
+                        a = (a * 1664525 + 1013904223) % 4294967296;
+                        return a / 4294967296;
+                    };
+                }
+                const rand = lcg(seed);
+
+                this.playlist = this.SONGS.slice(); // copy
+                for (let i = this.playlist.length - 1; i > 0; i--) {
+                    const j = Math.floor(rand() * (i + 1));
+                    [this.playlist[i], this.playlist[j]] = [this.playlist[j], this.playlist[i]];
+                }
+                this.currentIndex = 0;
+                this.updatePlaylistInfo();
+            }
+
+            // ─── 4) SYNC TO EPOCH & DETERMINE CURRENT SONG + OFFSET ────────────────
+            syncAndStart() {
+                const nowMs = Date.now();
+                let elapsedSec = (nowMs - this.RADIO_START_EPOCH) / 1000;
+                if (elapsedSec < 0) elapsedSec = 0;
+
+                const totalDuration = this.playlist.reduce((sum, s) => sum + s.duration, 0);
+                if (totalDuration <= 0) {
+                    this.updateStatus("Δεν βρέθηκαν τραγούδια!", "error");
+                    return;
+                }
+
+                let positionInLoop = elapsedSec % totalDuration;
+                let cum = 0;
+                for (let i = 0; i < this.playlist.length; i++) {
+                    const dur = this.playlist[i].duration;
+                    if (positionInLoop < cum + dur) {
+                        this.currentIndex = i;
+                        const offset = positionInLoop - cum;
+                        this.loadAndPlaySong(this.currentIndex, offset);
+                        return;
+                    }
+                    cum += dur;
+                }
+
+                // fallback to first if anything goes wrong
+                this.currentIndex = 0;
+                this.loadAndPlaySong(0, 0);
+            }
+
+            // ─── 5) LOAD A SONG AT A GIVEN OFFSET & PLAY ───────────────────────────
+            loadAndPlaySong(index, offsetSec) {
+                const entry = this.playlist[index];
+                if (!entry) return;
+
+                const filename = entry.filename;
+                const encoded = encodeURIComponent(filename);
+                const url = `music/${encoded}`;
+
+                this.songTitleEl.textContent = filename.replace(/\.mp3$/i, "") || "Άγνωστο τραγούδι";
+                this.songArtistEl.textContent = "";
+
+                this.progressFillEl.style.width = "0%";
+                this.currentTimeEl.textContent = "0:00";
+                this.totalTimeEl.textContent = "0:00";
+
+                this.updateStatus("Φόρτωση…", "warning");
+                this.audio.src = url;
+                this.audio.load();
+
+                this.audio.onloadedmetadata = () => {
+                    this.totalTimeEl.textContent = this.formatTime(this.audio.duration);
+                    const safeOffset = Math.min(offsetSec, this.audio.duration);
+                    this.audio.currentTime = safeOffset;
+                    this.audio.play().catch((e) => {
+                        console.error("Play prevented:", e);
+                        this.updateStatus("Πατήστε το ▶️ για να ξεκινήσετε", "warning");
+                    });
+                };
+            }
+
+            // ─── 6) WHEN TRACK ENDS → NEXT SONG (RESHUFFLE IF NEEDED) ─────────────
+            nextSong() {
+                this.currentIndex++;
+                if (this.currentIndex >= this.playlist.length) {
+                    this.createShuffledPlaylist();
+                    this.currentIndex = 0;
+                }
+                this.loadAndPlaySong(this.currentIndex, 0);
+                this.updatePlaylistInfo();
+            }
+
+            togglePlay() {
+                if (this.audio.paused) {
+                    this.audio.play().catch((e) => {
+                        console.error("Play prevented:", e);
+                        this.updateStatus("Πατήστε το ▶️ για να ξεκινήσετε", "warning");
+                    });
+                } else {
+                    this.audio.pause();
+                }
+            }
+
+            changeVolume(vol) {
+                this.audio.volume = vol / 100;
+                this.volumeValueEl.textContent = vol;
+            }
+
+            startProgressUpdater() {
+                this.stopProgressUpdater();
+                this.progressTimer = setInterval(() => {
+                    if (this.audio.duration) {
+                        const pct = (this.audio.currentTime / this.audio.duration) * 100;
+                        this.progressFillEl.style.width = `${pct}%`;
+                        this.currentTimeEl.textContent = this.formatTime(this.audio.currentTime);
+                    }
+                }, 500);
+            }
+
+            stopProgressUpdater() {
+                if (this.progressTimer) {
+                    clearInterval(this.progressTimer);
+                    this.progressTimer = null;
+                }
+            }
+
+            updatePlaylistInfo() {
+                const total = this.playlist.length;
+                const current = this.currentIndex + 1;
+                this.playlistInfoEl.innerHTML = `Λίστα: ${current}/${total} τραγούδια`;
+            }
+
+            updateStatus(msg, type = "info") {
+                this.statusEl.className = `status-box ${type}`;
+                this.statusEl.innerHTML = msg;
+            }
+
+            formatTime(sec) {
+                if (!sec || isNaN(sec)) return "0:00";
+                const m = Math.floor(sec / 60);
+                const s = Math.floor(sec % 60);
+                return `${m}:${s.toString().padStart(2, "0")}`;
+            }
+
+            getAudioErrorMessage() {
+                if (!this.audio.error) return "Άγνωστο σφάλμα";
+                switch (this.audio.error.code) {
+                    case MediaError.MEDIA_ERR_ABORTED: return "Αναπαραγωγή ακυρώθηκε";
+                    case MediaError.MEDIA_ERR_NETWORK: return "Σφάλμα δικτύου";
+                    case MediaError.MEDIA_ERR_DECODE: return "Σφάλμα μορφής αρχείου";
+                    case MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED: return "Αρχείο μη υποστηριζόμενο";
+                    default: return `Άγνωστο σφάλμα (${this.audio.error.code})`;
+                }
+            }
+        }
+
+        // Instantiate once DOM is ready
+        let radio;
+        document.addEventListener("DOMContentLoaded", () => {
+            radio = new RadioClient();
+        });
+    </script>
+</body>
+</html>

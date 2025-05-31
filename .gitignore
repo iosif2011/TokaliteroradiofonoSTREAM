@@ -1,0 +1,12 @@
+# Ignore Visual Studio workspace data
+.vs/
+
+# Ignore Node modules (if you ever ran npm install here)
+node_modules/
+
+# Ignore server-related files (we don’t need them for GitHub Pages)
+server.js
+package.json
+package-lock.json
+
+# Anything else you don’t want to commit

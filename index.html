@@ -7,6 +7,32 @@
 
     <!-- ─── Glassmorphic UI CSS (unchanged) ───────────────────────────────── -->
     <style>
+        @keyframes rainbowColor {
+            0% {
+                color: rgb(255, 0, 0);
+            }
+
+            25% {
+                color: rgb(0, 255, 0);
+            }
+
+            50% {
+                color: rgb(0, 0, 255);
+            }
+
+            75% {
+                color: rgb(255, 255, 0);
+            }
+
+            100% {
+                color: rgb(255, 0, 0);
+            }
+        }
+
+        .animated-rainbow {
+            animation: rainbowColor 10s infinite linear;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -227,7 +253,7 @@
 
 <body>
     <div class="radio-container">
-        <h1 class="radio-title">Το Καλύτερο Ραδιόφωνο</h1>
+        <h1 class="radio-title animated-rainbow">Το Καλύτερο Ραδιόφωνο by iosif</h1>
 
         <!-- STATUS BOX -->
         <div id="status" class="status-box">
@@ -266,7 +292,7 @@
 
         <!-- SYNC INFO (Client‐Side) -->
         <div class="sync-info">
-            🔁 Μόνο με GitHub
+            🌐 Συγχρονισμένο τοπικά
         </div>
     </div>
 
@@ -516,4 +542,3 @@
     </script>
 </body>
 </html>
-make the Το Καλύτερο Ραδιόφωνο text to be Το Καλύτερο Ραδιόφωνο by iosif and add an rgb animation being slow to make it look better. also this needs tor un on github so only readi not write code

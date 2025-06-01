@@ -409,7 +409,7 @@
 
                 const filename = entry.filename;
                 const encoded = encodeURIComponent(filename);
-                const url = music / ${ encoded };
+                const url = `music/${encoded}`;
 
                 this.songTitleEl.textContent = filename.replace(/\.mp3$/i, "") || "Άγνωστο τραγούδι";
                 this.songArtistEl.textContent = "";
@@ -465,7 +465,7 @@
                 this.progressTimer = setInterval(() => {
                     if (this.audio.duration) {
                         const pct = (this.audio.currentTime / this.audio.duration) * 100;
-                        this.progressFillEl.style.width = ${ pct }%;
+                        this.progressFillEl.style.width = `${pct}%`;
                         this.currentTimeEl.textContent = this.formatTime(this.audio.currentTime);
                     }
                 }, 500);
@@ -481,11 +481,11 @@
             updatePlaylistInfo() {
                 const total = this.playlist.length;
                 const current = this.currentIndex + 1;
-                this.playlistInfoEl.innerHTML = Λίστα: ${ current } /${total} τραγούδια;
+                this.playlistInfoEl.innerHTML = `Λίστα: ${current}/${total} τραγούδια`;
             }
 
             updateStatus(msg, type = "info") {
-                this.statusEl.className = status - box ${ type };
+                this.statusEl.className = `status-box ${type}`;
                 this.statusEl.innerHTML = msg;
             }
 
@@ -493,7 +493,7 @@
                 if (!sec || isNaN(sec)) return "0:00";
                 const m = Math.floor(sec / 60);
                 const s = Math.floor(sec % 60);
-                return ${ m }:${ s.toString().padStart(2, "0") };
+                return `${m}:${s.toString().padStart(2, "0")}`;
             }
 
             getAudioErrorMessage() {
@@ -503,7 +503,7 @@
                     case MediaError.MEDIA_ERR_NETWORK: return "Σφάλμα δικτύου";
                     case MediaError.MEDIA_ERR_DECODE: return "Σφάλμα μορφής αρχείου";
                     case MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED: return "Αρχείο μη υποστηριζόμενο";
-                    default: return Άγνωστο σφάλμα(${ this.audio.error.code });
+                    default: return `Άγνωστο σφάλμα (${this.audio.error.code})`;
                 }
             }
         }

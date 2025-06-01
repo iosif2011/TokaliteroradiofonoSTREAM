@@ -7,32 +7,6 @@
 
     <!-- ─── Glassmorphic UI CSS (unchanged) ───────────────────────────────── -->
     <style>
-        @keyframes rainbowColor {
-            0% {
-                color: rgb(255, 0, 0);
-            }
-
-            25% {
-                color: rgb(0, 255, 0);
-            }
-
-            50% {
-                color: rgb(0, 0, 255);
-            }
-
-            75% {
-                color: rgb(255, 255, 0);
-            }
-
-            100% {
-                color: rgb(255, 0, 0);
-            }
-        }
-
-        .animated-rainbow {
-            animation: rainbowColor 10s infinite linear;
-        }
-
         * {
             margin: 0;
             padding: 0;
@@ -253,7 +227,13 @@
 
 <body>
     <div class="radio-container">
-        <h1 class="radio-title animated-rainbow">Το Καλύτερο Ραδιόφωνο by iosif</h1>
+        <h1 class="radio-title">Το Καλύτερο Ραδιόφωνο</h1>
+
+        <!-- STATUS BOX -->
+        <div id="status" class="status-box">
+            <div class="loading"></div>
+            Σύνδεση...
+        </div>
 
         <!-- SONG INFO (Initially Hidden) -->
         <div id="song-info" class="song-info hidden">
@@ -429,7 +409,7 @@
 
                 const filename = entry.filename;
                 const encoded = encodeURIComponent(filename);
-                const url = `music/${encoded}`;
+                const url = music / ${ encoded };
 
                 this.songTitleEl.textContent = filename.replace(/\.mp3$/i, "") || "Άγνωστο τραγούδι";
                 this.songArtistEl.textContent = "";
@@ -485,7 +465,7 @@
                 this.progressTimer = setInterval(() => {
                     if (this.audio.duration) {
                         const pct = (this.audio.currentTime / this.audio.duration) * 100;
-                        this.progressFillEl.style.width = `${pct}%`;
+                        this.progressFillEl.style.width = ${ pct }%;
                         this.currentTimeEl.textContent = this.formatTime(this.audio.currentTime);
                     }
                 }, 500);
@@ -501,11 +481,11 @@
             updatePlaylistInfo() {
                 const total = this.playlist.length;
                 const current = this.currentIndex + 1;
-                this.playlistInfoEl.innerHTML = `Λίστα: ${current}/${total} τραγούδια`;
+                this.playlistInfoEl.innerHTML = Λίστα: ${ current } /${total} τραγούδια;
             }
 
             updateStatus(msg, type = "info") {
-                this.statusEl.className = `status-box ${type}`;
+                this.statusEl.className = status - box ${ type };
                 this.statusEl.innerHTML = msg;
             }
 
@@ -513,7 +493,7 @@
                 if (!sec || isNaN(sec)) return "0:00";
                 const m = Math.floor(sec / 60);
                 const s = Math.floor(sec % 60);
-                return `${m}:${s.toString().padStart(2, "0")}`;
+                return ${ m }:${ s.toString().padStart(2, "0") };
             }
 
             getAudioErrorMessage() {
@@ -523,7 +503,7 @@
                     case MediaError.MEDIA_ERR_NETWORK: return "Σφάλμα δικτύου";
                     case MediaError.MEDIA_ERR_DECODE: return "Σφάλμα μορφής αρχείου";
                     case MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED: return "Αρχείο μη υποστηριζόμενο";
-                    default: return `Άγνωστο σφάλμα (${this.audio.error.code})`;
+                    default: return Άγνωστο σφάλμα(${ this.audio.error.code });
                 }
             }
         }
@@ -536,3 +516,4 @@
     </script>
 </body>
 </html>
+make the Το Καλύτερο Ραδιόφωνο text to be Το Καλύτερο Ραδιόφωνο by iosif and add an rgb animation being slow to make it look better. also this needs tor un on github so only readi not write code

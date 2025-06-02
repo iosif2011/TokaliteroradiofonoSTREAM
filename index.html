@@ -11,16 +11,6 @@
 
     <!-- ─── Minecraft UI CSS with Clock ───────────────────────────────── -->
     <style>
-        @keyframes marquee {
-            0% {
-                transform: translateX(-100%);
-            }
-
-            100% {
-                transform: translateX(100%);
-            }
-        }
-
         @keyframes rainbowColor {
             0% {
                 color: rgb(255, 0, 0);
@@ -48,20 +38,6 @@
         }
 
         /* Marquee scrolling animation for long titles */
-        @keyframes marqueeIn {
-            0% {
-                transform: translateX(100%);
-            }
-
-            100% {
-                transform: translateX(0%);
-            }
-        }
-
-        .marquee-in {
-            animation: marqueeIn 1s ease-out forwards;
-        }
-
         @keyframes marquee {
             0% {
                 transform: translateX(-100%);
@@ -780,21 +756,8 @@
 
             // MISSING FUNCTION - Add marquee effect for long titles
             updateMarqueeEffect(title) {
-                const el = this.songTitleEl;
-                el.classList.remove('short');
-                el.classList.remove('marquee-text');
-
-                el.style.animation = 'none'; // reset any previous animation
-                void el.offsetWidth; // force browser reflow to restart animation
-
-                el.classList.add('marquee-in');
-
-                setTimeout(() => {
-                    el.classList.remove('marquee-in');
-                    el.classList.add('marquee-text');
-                }, 1000); // matches the 1s duration of marqueeIn
+                this.songTitleEl.classList.remove('short');
             }
-
 
 
             nextSong() {

@@ -53,11 +53,14 @@
             overflow: hidden;
             position: relative;
             white-space: nowrap;
+            mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+            -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
         }
+
 
         .marquee-text {
             display: inline-block;
-            animation: marquee 3s linear infinite;
+            animation: marquee 5s linear infinite;
             padding-left: 50%;
             white-space: nowrap;
         }

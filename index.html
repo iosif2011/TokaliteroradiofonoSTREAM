@@ -5,7 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Το Καλύτερο Ραδιόφωνο</title>
 
-    <!-- ─── Glassmorphic UI CSS (unchanged) ───────────────────────────────── -->
+    <!-- Import Minecraft-style font from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+    <!-- ─── Minecraft UI CSS with Clock ───────────────────────────────── -->
     <style>
         @keyframes rainbowColor {
             0% {
@@ -33,6 +36,38 @@
             animation: rainbowColor 10s infinite linear;
         }
 
+        /* Marquee scrolling animation for long titles */
+        @keyframes marquee {
+            0% {
+                transform: translateX(100%);
+            }
+
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        .marquee-container {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            white-space: nowrap;
+        }
+
+        .marquee-text {
+            display: inline-block;
+            animation: marquee 15s linear infinite;
+            padding-left: 100%;
+        }
+
+            /* Only apply marquee if text is too long */
+            .marquee-text.short {
+                animation: none;
+                padding-left: 0;
+                text-align: center;
+                width: 100%;
+            }
+
         * {
             margin: 0;
             padding: 0;
@@ -40,47 +75,104 @@
         }
 
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Press Start 2P', 'Courier New', monospace;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             color: white;
+            gap: 30px;
+            padding: 20px;
+            font-size: 12px;
+        }
+
+        .main-container {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .clock-container {
+            background: #333333;
+            border: 4px solid #666666;
+            border-style: outset;
+            padding: 30px;
+            text-align: center;
+            min-width: 250px;
+            box-shadow: 4px 4px 0px #000000;
+        }
+
+        .clock-title {
+            font-size: 10px;
+            margin-bottom: 20px;
+            color: #FFFF00;
+            text-shadow: 2px 2px 0px #000000;
+        }
+
+        .digital-clock {
+            font-size: 16px;
+            font-weight: normal;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 0px #000000;
+            color: #00FF00;
+        }
+
+        .date-display {
+            font-size: 8px;
+            margin-bottom: 15px;
+            color: #CCCCCC;
+            text-shadow: 1px 1px 0px #000000;
+        }
+
+        .timezone-info {
+            font-size: 7px;
+            padding: 8px 12px;
+            background: #222222;
+            border: 2px solid #444444;
+            border-style: inset;
+            color: #AAAAAA;
+            text-shadow: 1px 1px 0px #000000;
         }
 
         .radio-container {
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
+            background: #333333;
+            border: 4px solid #666666;
+            border-style: outset;
             padding: 40px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            box-shadow: 4px 4px 0px #000000;
             text-align: center;
             min-width: 400px;
             max-width: 500px;
         }
 
         .radio-title {
-            font-size: 2.5em;
+            font-size: 14px;
             margin-bottom: 30px;
-            font-weight: 300;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            font-weight: normal;
+            text-shadow: 2px 2px 0px #000000;
         }
 
         .status-box {
-            background: rgba(255,255,255,0.1);
-            border-radius: 10px;
+            background: #222222;
+            border: 2px solid #444444;
+            border-style: inset;
             padding: 15px;
             margin: 20px 0;
-            border-left: 4px solid #4CAF50;
+            color: #00FF00;
+            text-shadow: 1px 1px 0px #000000;
         }
 
             .status-box.error {
-                border-left-color: #f44336;
+                color: #FF0000;
+                border-color: #AA0000;
             }
 
             .status-box.warning {
-                border-left-color: #ff9800;
+                color: #FFAA00;
+                border-color: #AA6600;
             }
 
         .song-info {
@@ -88,40 +180,52 @@
         }
 
         .song-title {
-            font-size: 1.5em;
+            font-size: 12px;
             margin-bottom: 10px;
-            font-weight: bold;
+            font-weight: normal;
+            color: #FFFF00;
+            text-shadow: 2px 2px 0px #000000;
+            height: 20px;
+            line-height: 20px;
         }
 
         .song-artist {
-            font-size: 1.1em;
-            opacity: 0.8;
+            font-size: 10px;
+            color: #CCCCCC;
+            text-shadow: 1px 1px 0px #000000;
         }
 
         .play-button {
             width: 80px;
             height: 80px;
-            border-radius: 50%;
-            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
-            border: none;
+            background: #555555;
+            border: 4px solid #777777;
+            border-style: outset;
             color: white;
-            font-size: 2em;
+            font-size: 20px;
             cursor: pointer;
-            margin: 20px 0;
-            transition: transform 0.2s;
+            margin: 20px auto;
+            font-family: 'Press Start 2P', 'Courier New', monospace;
+            text-shadow: 2px 2px 0px #000000;
+            transition: none;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 20px auto;
         }
 
             .play-button:hover {
-                transform: scale(1.1);
+                background: #666666;
+            }
+
+            .play-button:active {
+                border-style: inset;
             }
 
             .play-button:disabled {
-                opacity: 0.5;
+                background: #333333;
+                color: #666666;
                 cursor: not-allowed;
+                border-color: #444444;
             }
 
         .volume-control {
@@ -133,16 +237,20 @@
             align-items: center;
             justify-content: center;
             margin-bottom: 15px;
-            font-size: 1.1em;
+            font-size: 10px;
+            color: #CCCCCC;
+            text-shadow: 1px 1px 0px #000000;
         }
 
         .volume-slider {
             width: 100%;
-            height: 6px;
-            border-radius: 3px;
-            background: rgba(255,255,255,0.3);
+            height: 10px;
+            background: #222222;
+            border: 2px solid #444444;
+            border-style: inset;
             outline: none;
             -webkit-appearance: none;
+            cursor: pointer;
         }
 
             .volume-slider::-webkit-slider-thumb {
@@ -150,47 +258,51 @@
                 appearance: none;
                 width: 20px;
                 height: 20px;
-                border-radius: 50%;
-                background: white;
+                background: #666666;
+                border: 2px solid #888888;
+                border-style: outset;
                 cursor: pointer;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.3);
             }
 
             .volume-slider::-moz-range-thumb {
                 width: 20px;
                 height: 20px;
-                border-radius: 50%;
-                background: white;
+                background: #666666;
+                border: 2px solid #888888;
+                border-style: outset;
                 cursor: pointer;
-                border: none;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+                border-radius: 0;
             }
 
         .playlist-info {
-            background: rgba(255,255,255,0.1);
-            border-radius: 10px;
+            background: #222222;
+            border: 2px solid #444444;
+            border-style: inset;
             padding: 15px;
             margin-top: 20px;
+            color: #AAAAAA;
+            text-shadow: 1px 1px 0px #000000;
+            font-size: 10px;
         }
 
         .sync-info {
-            font-size: 0.9em;
-            opacity: 0.7;
+            font-size: 8px;
+            color: #888888;
             margin-top: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 5px;
+            text-shadow: 1px 1px 0px #000000;
         }
 
         .loading {
             display: inline-block;
             width: 20px;
             height: 20px;
-            border: 3px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s ease-in-out infinite;
+            border: 3px solid #333333;
+            border-top: 3px solid #00FF00;
+            animation: spin 1s linear infinite;
         }
 
         @keyframes spin {
@@ -205,17 +317,17 @@
 
         .progress-bar {
             width: 100%;
-            height: 4px;
-            background: rgba(255,255,255,0.3);
-            border-radius: 2px;
+            height: 8px;
+            background: #222222;
+            border: 2px solid #444444;
+            border-style: inset;
             margin: 10px 0;
             overflow: hidden;
         }
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #4ECDC4, #44A08D);
-            border-radius: 2px;
+            background: #00AA00;
             transition: width 0.1s linear;
             width: 0%;
         }
@@ -223,9 +335,10 @@
         .time-info {
             display: flex;
             justify-content: space-between;
-            font-size: 0.9em;
-            opacity: 0.8;
+            font-size: 8px;
+            color: #CCCCCC;
             margin-top: 5px;
+            text-shadow: 1px 1px 0px #000000;
         }
 
         .test-buttons {
@@ -236,71 +349,162 @@
         }
 
         .test-btn {
-            padding: 5px 10px;
-            background: rgba(255,255,255,0.2);
-            border: none;
-            border-radius: 5px;
+            padding: 8px 12px;
+            background: #555555;
+            border: 2px solid #777777;
+            border-style: outset;
             color: white;
             cursor: pointer;
-            font-size: 0.8em;
+            font-size: 8px;
+            font-family: 'Press Start 2P', 'Courier New', monospace;
+            text-shadow: 1px 1px 0px #000000;
         }
 
             .test-btn:hover {
-                background: rgba(255,255,255,0.3);
+                background: #666666;
             }
+
+            .test-btn:active {
+                border-style: inset;
+            }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            body {
+                font-size: 10px;
+            }
+
+            .main-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .clock-container {
+                min-width: 200px;
+            }
+
+            .radio-container {
+                min-width: 350px;
+            }
+
+            .digital-clock {
+                font-size: 14px;
+            }
+
+            .radio-title {
+                font-size: 12px;
+            }
+        }
     </style>
 </head>
 
 <body>
-    <div class="radio-container">
-        <h1 class="radio-title animated-rainbow">Το Καλύτερο Ραδιόφωνο by iosif</h1>
-
-        <!-- STATUS BOX -->
-        <div id="status" class="status-box">
-            <div class="loading"></div>
-            Σύνδεση...
+    <div class="main-container">
+        <!-- CLOCK SECTION -->
+        <div class="clock-container">
+            <div class="clock-title">🕐 Ώρα Ελλάδας</div>
+            <div class="digital-clock" id="digital-clock">00:00:00</div>
+            <div class="date-display" id="date-display">Δευτέρα, 1 Ιανουαρίου 2024</div>
+            <div class="timezone-info">Athens, Greece (EET/EEST)</div>
         </div>
 
-        <!-- SONG INFO (Initially Hidden) -->
-        <div id="song-info" class="song-info hidden">
-            <div class="song-title" id="song-title">Κανένα τραγούδι</div>
-            <div class="song-artist" id="song-artist"></div>
-            <div class="progress-bar">
-                <div class="progress-fill" id="progress-fill"></div>
+        <!-- RADIO SECTION -->
+        <div class="radio-container">
+            <h1 class="radio-title animated-rainbow">Το Καλύτερο Ραδιόφωνο by iosif</h1>
+
+            <!-- STATUS BOX -->
+            <div id="status" class="status-box">
+                <div class="loading"></div>
+                Σύνδεση...
             </div>
-            <div class="time-info">
-                <span id="current-time">0:00</span>
-                <span id="total-time">0:00</span>
+
+            <!-- SONG INFO (Initially Hidden) -->
+            <div id="song-info" class="song-info hidden">
+                <div class="song-title">
+                    <div class="marquee-container">
+                        <div class="marquee-text" id="song-title">Κανένα τραγούδι</div>
+                    </div>
+                </div>
+                <div class="song-artist" id="song-artist"></div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+                <div class="time-info">
+                    <span id="current-time">0:00</span>
+                    <span id="total-time">0:00</span>
+                </div>
             </div>
-        </div>
 
-        <!-- PLAY / PAUSE BUTTON -->
-        <button id="play-button" class="play-button" disabled>▶️</button>
+            <!-- PLAY / PAUSE BUTTON -->
+            <button id="play-button" class="play-button" disabled>▶️</button>
 
-        <!-- VOLUME CONTROL -->
-        <div class="volume-control">
-            <div class="volume-label">
-                🔊 Ένταση: <span id="volume-value">50</span>%
+            <!-- VOLUME CONTROL -->
+            <div class="volume-control">
+                <div class="volume-label">
+                    🔊 Ένταση: <span id="volume-value">50</span>%
+                </div>
+                <input type="range" id="volume-slider" class="volume-slider" min="0" max="100" value="50" />
             </div>
-            <input type="range" id="volume-slider" class="volume-slider" min="0" max="100" value="50" />
-        </div>
 
-        <!-- PLAYLIST INFO (Current/Total Count) -->
-        <div id="playlist-info" class="playlist-info">
-            Φόρτωση λίστας αναπαραγωγής...
-        </div>
+            <!-- PLAYLIST INFO (Current/Total Count) -->
+            <div id="playlist-info" class="playlist-info">
+                Φόρτωση λίστας αναπαραγωγής...
+            </div>
 
-        <!-- SYNC INFO (Client‐Side) -->
-        <div class="sync-info">
-            🔒 Μόνο με GitHub
+            <!-- SYNC INFO (Client‐Side) -->
+            <div class="sync-info">
+                🔒 Μόνο με GitHub
+            </div>
         </div>
     </div>
 
     <!-- HIDDEN AUDIO ELEMENT -->
     <audio id="audio-player" preload="metadata" crossorigin="anonymous"></audio>
 
-    <!-- ─── Client‐Side JavaScript (Static Synchronized Radio) ─────────────── -->
+    <!-- ─── Client‐Side JavaScript (Static Synchronized Radio + Clock) ─────────────── -->
     <script>
+        // ─── CLOCK FUNCTIONALITY ─────────────────────────────────────────────
+        class GreekClock {
+            constructor() {
+                this.clockEl = document.getElementById("digital-clock");
+                this.dateEl = document.getElementById("date-display");
+                this.startClock();
+            }
+
+            startClock() {
+                this.updateClock();
+                setInterval(() => this.updateClock(), 1000);
+            }
+
+            updateClock() {
+                const now = new Date();
+
+                // Format time in Greek timezone
+                const timeOptions = {
+                    timeZone: 'Europe/Athens',
+                    hour12: false,
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                };
+
+                const dateOptions = {
+                    timeZone: 'Europe/Athens',
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                };
+
+                const timeString = now.toLocaleTimeString('el-GR', timeOptions);
+                const dateString = now.toLocaleDateString('el-GR', dateOptions);
+
+                this.clockEl.textContent = timeString;
+                this.dateEl.textContent = dateString;
+            }
+        }
+
+        // ─── RADIO CLIENT CLASS (UNCHANGED) ─────────────────────────────────────
         class RadioClient {
             constructor() {
                 // ─── 1) LIST YOUR SONGS HERE ───────────────────────────────────────────
@@ -362,7 +566,7 @@
                     { filename: "TheyDon'tCareAboutUs.mp3", duration: 284 },
                     { filename: "WithoutMe.mp3", duration: 291 },
                     { filename: "SingForTheMoment.mp3", duration: 348 },
-                    { filename: "Mockingbird.mp3", duration: 257},
+                    { filename: "Mockingbird.mp3", duration: 257 },
                     { filename: "Gangsta'sParadise.mp3", duration: 241 },
                     { filename: "SurroundSound.mp3", duration: 230 },
                     { filename: "Believer.mp3", duration: 204 },
@@ -407,7 +611,7 @@
                     // …for each MP3 you have in the /music folder…
                 ];
 
-                // ─── 2) FIXED EPOCH (“RADIO STARTED” UTC millis) ─────────────────────
+                // ─── 2) FIXED EPOCH ("RADIO STARTED" UTC millis) ─────────────────────
                 //   Use a date in the past so elapsed always ≥ 0. Example: Jan 1 2025 00:00 UTC:
                 this.RADIO_START_EPOCH = 1704067200000;
 
@@ -432,7 +636,7 @@
                 this.initializeElements();
                 this.setupAudioEvents();
                 this.createShuffledPlaylist();  // shuffle now
-                this.syncAndStart();            // figure out “where to begin”
+                this.syncAndStart();            // figure out "where to begin"
             }
 
             initializeElements() {
@@ -530,8 +734,12 @@
                 const encoded = encodeURIComponent(filename);
                 const url = `music/${encoded}`;
 
-                this.songTitleEl.textContent = filename.replace(/\.mp3$/i, "") || "Άγνωστο τραγούδι";
+                const songTitle = filename.replace(/\.mp3$/i, "") || "Άγνωστο τραγούδι";
+                this.songTitleEl.textContent = songTitle;
                 this.songArtistEl.textContent = "";
+
+                // Check if title needs marquee scrolling
+                this.updateMarqueeEffect(songTitle);
 
                 this.progressFillEl.style.width = "0%";
                 this.currentTimeEl.textContent = "0:00";

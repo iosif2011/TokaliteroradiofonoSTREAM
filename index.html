@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html lang="el">
 <head>
     <meta charset="UTF-8" />
@@ -173,6 +174,11 @@
             .status-box.warning {
                 color: #FFAA00;
                 border-color: #AA6600;
+            }
+
+            .status-box.success {
+                color: #00FF00;
+                border-color: #00AA00;
             }
 
         .song-info {
@@ -455,6 +461,12 @@
             <div class="sync-info">
                 🔒 Μόνο με GitHub
             </div>
+
+            <!-- TEST BUTTONS FOR DEBUGGING -->
+            <div class="test-buttons">
+                <button class="test-btn" onclick="testAudio()">Test Audio</button>
+                <button class="test-btn" onclick="showDebugInfo()">Debug Info</button>
+            </div>
         </div>
     </div>
 
@@ -504,12 +516,10 @@
             }
         }
 
-        // ─── RADIO CLIENT CLASS (UNCHANGED) ─────────────────────────────────────
+        // ─── RADIO CLIENT CLASS ─────────────────────────────────────
         class RadioClient {
             constructor() {
                 // ─── 1) LIST YOUR SONGS HERE ───────────────────────────────────────────
-                //   For every MP3 in /music/, add an object with:
-                //   { filename: "<exact name>.mp3", duration: <length in seconds> }
                 this.SONGS = [
                     { filename: "BrainDamage.mp3", duration: 226 },
                     { filename: "KillYou.mp3", duration: 264 },
@@ -561,58 +571,10 @@
                     { filename: "RapGod.mp3", duration: 369 },
                     { filename: "TheRealSlimShady.mp3", duration: 284 },
                     { filename: "LoseYourself.mp3", duration: 320 },
-                    { filename: "InDaGetto.mp3", duration: 131 },
-                    { filename: "Can'tHoldUs.mp3", duration: 290 },
-                    { filename: "TheyDon'tCareAboutUs.mp3", duration: 284 },
-                    { filename: "WithoutMe.mp3", duration: 291 },
-                    { filename: "SingForTheMoment.mp3", duration: 348 },
-                    { filename: "Mockingbird.mp3", duration: 257 },
-                    { filename: "Gangsta'sParadise.mp3", duration: 241 },
-                    { filename: "SurroundSound.mp3", duration: 230 },
-                    { filename: "Believer.mp3", duration: 204 },
-                    { filename: "I'mStillStanding.mp3", duration: 183 },
-                    { filename: "Natural.mp3", duration: 186 },
-                    { filename: "Starboy.mp3", duration: 227 },
-                    { filename: "MyNameIs.mp3", duration: 280 },
-                    { filename: "ShploinkOverdose(Remix).mp3", duration: 108 },
-                    { filename: "ShploinkOverdose.mp3", duration: 85 },
-                    { filename: "InYourHead.mp3", duration: 182 },
-                    { filename: "Bad.mp3", duration: 247 },
-                    { filename: "Zombie.mp3", duration: 308 },
-                    { filename: "WeWillRockYou.mp3", duration: 122 },
-                    { filename: "(Nendest)NarkootikumidestEiTeaMe(Küll)Midagi.mp3", duration: 169 },
-                    { filename: "Low.mp3", duration: 230 },
-                    { filename: "Luchtballon.mp3", duration: 136 },
-                    { filename: "ILoveRock NRoll.mp3", duration: 174 },
-                    { filename: "Huzzah!.mp3", duration: 113 },
-                    { filename: "Human.mp3", duration: 196 },
-                    { filename: "Popular.mp3", duration: 215 },
-                    { filename: "HighestInTheRoom.mp3", duration: 177 },
-                    { filename: "ThriftShop.mp3", duration: 243 },
-                    { filename: "Heathens.mp3", duration: 194 },
-                    { filename: "IWonder.mp3", duration: 243 },
-                    { filename: "AnotherOneBitesTheDust.mp3", duration: 214 },
-                    { filename: "Europapa.mp3", duration: 160 },
-                    { filename: "ChaChaCha.mp3", duration: 176 },
-                    { filename: "Thunder.mp3", duration: 183 },
-                    { filename: "TheHills.mp3", duration: 242 },
-                    { filename: "Redrum.mp3", duration: 272 },
-                    { filename: "IKilledYou.mp3", duration: 168 },
-                    { filename: "RahTahTah.mp3", duration: 166 },
-                    { filename: "St.Chroma.mp3", duration: 197 },
-                    { filename: "Sandstorm.mp3", duration: 232 },
-                    { filename: "AllMyFellas.mp3", duration: 141 },
-                    { filename: "Ackrite.mp3", duration: 220 },
-                    { filename: "24KMagic.mp3", duration: 226 },
-                    { filename: "FE!N.mp3", duration: 193 },
-                    { filename: "Tremor.mp3", duration: 294 },
-                    { filename: "Trafik!.mp3", duration: 133 },
-                    { filename: "Houdini.mp3", duration: 227 },
-                    // …for each MP3 you have in the /music folder…
+                    { filename: "InDaGetto.mp3", duration: 131 }
                 ];
 
                 // ─── 2) FIXED EPOCH ("RADIO STARTED" UTC millis) ─────────────────────
-                //   Use a date in the past so elapsed always ≥ 0. Example: Jan 1 2025 00:00 UTC:
                 this.RADIO_START_EPOCH = 1704067200000;
 
                 // ─── Internal References ────────────────────────────────────────────
@@ -629,29 +591,26 @@
                 this.currentTimeEl = document.getElementById("current-time");
                 this.totalTimeEl = document.getElementById("total-time");
 
-                this.playlist = [];       // will hold a shuffled copy of SONGS
-                this.currentIndex = 0;    // index into playlist
+                this.playlist = [];
+                this.currentIndex = 0;
                 this.progressTimer = null;
 
                 this.initializeElements();
                 this.setupAudioEvents();
-                this.createShuffledPlaylist();  // shuffle now
-                this.syncAndStart();            // figure out "where to begin"
+                this.createShuffledPlaylist();
+                this.syncAndStart();
             }
 
             initializeElements() {
-                // Play/Pause button
                 this.playButtonEl.addEventListener("click", () => {
                     this.togglePlay();
                 });
-                // Volume slider
                 this.volumeSliderEl.addEventListener("input", (e) => {
                     this.changeVolume(parseInt(e.target.value));
                 });
             }
 
             setupAudioEvents() {
-                // When metadata loads, show duration & enable playback
                 this.audio.addEventListener("loadedmetadata", () => {
                     this.totalTimeEl.textContent = this.formatTime(this.audio.duration);
                     this.updateStatus("Σε αναπαραγωγή", "success");
@@ -659,25 +618,32 @@
                     this.songInfoEl.classList.remove("hidden");
                 });
 
-                // Update progress bar every 500ms while playing
                 this.audio.addEventListener("play", () => {
                     this.playButtonEl.textContent = "⏸️";
                     this.startProgressUpdater();
                 });
+
                 this.audio.addEventListener("pause", () => {
                     this.playButtonEl.textContent = "▶️";
                     this.stopProgressUpdater();
                 });
 
-                // When a track ends locally, go to the next track
                 this.audio.addEventListener("ended", () => {
                     this.nextSong();
                 });
+
+                // Add error handling
+                this.audio.addEventListener("error", () => {
+                    console.error("Audio error:", this.audio.error);
+                    this.updateStatus(`Σφάλμα: ${this.getAudioErrorMessage()}`, "error");
+                    setTimeout(() => {
+                        this.nextSong(); // Try next song
+                    }, 2000);
+                });
             }
 
-            // ─── 3) SHUFFLE SONGS DETERMINISTICALLY (so everyone gets same order) ─────
             createShuffledPlaylist() {
-                const seed = this.RADIO_START_EPOCH >>> 0; // 32-bit integer seed
+                const seed = this.RADIO_START_EPOCH >>> 0;
                 function lcg(a) {
                     return function () {
                         a = (a * 1664525 + 1013904223) % 4294967296;
@@ -686,7 +652,7 @@
                 }
                 const rand = lcg(seed);
 
-                this.playlist = this.SONGS.slice(); // copy
+                this.playlist = this.SONGS.slice();
                 for (let i = this.playlist.length - 1; i > 0; i--) {
                     const j = Math.floor(rand() * (i + 1));
                     [this.playlist[i], this.playlist[j]] = [this.playlist[j], this.playlist[i]];
@@ -695,7 +661,6 @@
                 this.updatePlaylistInfo();
             }
 
-            // ─── 4) SYNC TO EPOCH & DETERMINE CURRENT SONG + OFFSET ────────────────
             syncAndStart() {
                 const nowMs = Date.now();
                 let elapsedSec = (nowMs - this.RADIO_START_EPOCH) / 1000;
@@ -720,12 +685,10 @@
                     cum += dur;
                 }
 
-                // fallback to first if anything goes wrong
                 this.currentIndex = 0;
                 this.loadAndPlaySong(0, 0);
             }
 
-            // ─── 5) LOAD A SONG AT A GIVEN OFFSET & PLAY ───────────────────────────
             loadAndPlaySong(index, offsetSec) {
                 const entry = this.playlist[index];
                 if (!entry) return;
@@ -738,7 +701,6 @@
                 this.songTitleEl.textContent = songTitle;
                 this.songArtistEl.textContent = "";
 
-                // Check if title needs marquee scrolling
                 this.updateMarqueeEffect(songTitle);
 
                 this.progressFillEl.style.width = "0%";
@@ -760,7 +722,16 @@
                 };
             }
 
-            // ─── 6) WHEN TRACK ENDS → NEXT SONG (RESHUFFLE IF NEEDED) ─────────────
+            // MISSING FUNCTION - Add marquee effect for long titles
+            updateMarqueeEffect(title) {
+                const marqueeText = this.songTitleEl;
+                if (title.length > 25) { // If title is long
+                    marqueeText.classList.remove('short');
+                } else {
+                    marqueeText.classList.add('short');
+                }
+            }
+
             nextSong() {
                 this.currentIndex++;
                 if (this.currentIndex >= this.playlist.length) {

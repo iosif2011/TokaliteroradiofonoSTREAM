@@ -410,7 +410,6 @@
         <div class="clock-container">
             <div class="clock-title">🕐 Ώρα Ελλάδας</div>
             <div class="digital-clock" id="digital-clock">00:00:00</div>
-            <div class="date-display" id="date-display">Δευτέρα, 1 Ιανουαρίου 2024</div>
             <div class="timezone-info">Athens, Greece (EET/EEST)</div>
         </div>
 
@@ -461,12 +460,6 @@
             <div class="sync-info">
                 🔒 Μόνο με GitHub
             </div>
-
-            <!-- TEST BUTTONS FOR DEBUGGING -->
-            <div class="test-buttons">
-                <button class="test-btn" onclick="testAudio()">Test Audio</button>
-                <button class="test-btn" onclick="showDebugInfo()">Debug Info</button>
-            </div>
         </div>
     </div>
 
@@ -479,7 +472,6 @@
         class GreekClock {
             constructor() {
                 this.clockEl = document.getElementById("digital-clock");
-                this.dateEl = document.getElementById("date-display");
                 this.startClock();
             }
 
@@ -490,31 +482,13 @@
 
             updateClock() {
                 const now = new Date();
-
-                // Format time in Greek timezone
-                const timeOptions = {
-                    timeZone: 'Europe/Athens',
-                    hour12: false,
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit'
-                };
-
-                const dateOptions = {
-                    timeZone: 'Europe/Athens',
-                    weekday: 'long',
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                };
-
-                const timeString = now.toLocaleTimeString('el-GR', timeOptions);
-                const dateString = now.toLocaleDateString('el-GR', dateOptions);
-
-                this.clockEl.textContent = timeString;
-                this.dateEl.textContent = dateString;
+                const h = now.getHours().toString().padStart(2, '0');
+                const m = now.getMinutes().toString().padStart(2, '0');
+                const s = now.getSeconds().toString().padStart(2, '0');
+                this.clockEl.textContent = `${h}:${m}:${s}`;
             }
         }
+
 
         // ─── RADIO CLIENT CLASS ─────────────────────────────────────
         class RadioClient {
@@ -571,7 +545,54 @@
                     { filename: "RapGod.mp3", duration: 369 },
                     { filename: "TheRealSlimShady.mp3", duration: 284 },
                     { filename: "LoseYourself.mp3", duration: 320 },
-                    { filename: "InDaGetto.mp3", duration: 131 }
+                    { filename: "InDaGetto.mp3", duration: 131 },
+                    { filename: "Can'tHoldUs.mp3", duration: 290 },
+                    { filename: "TheyDon'tCareAboutUs.mp3", duration: 284 },
+                    { filename: "WithoutMe.mp3", duration: 291 },
+                    { filename: "SingForTheMoment.mp3", duration: 348 },
+                    { filename: "Mockingbird.mp3", duration: 257 },
+                    { filename: "Gangsta'sParadise.mp3", duration: 241 },
+                    { filename: "SurroundSound.mp3", duration: 230 },
+                    { filename: "Believer.mp3", duration: 204 },
+                    { filename: "I'mStillStanding.mp3", duration: 183 },
+                    { filename: "Natural.mp3", duration: 186 },
+                    { filename: "Starboy.mp3", duration: 227 },
+                    { filename: "MyNameIs.mp3", duration: 280 },
+                    { filename: "ShploinkOverdose(Remix).mp3", duration: 108 },
+                    { filename: "ShploinkOverdose.mp3", duration: 85 },
+                    { filename: "InYourHead.mp3", duration: 182 },
+                    { filename: "Bad.mp3", duration: 247 },
+                    { filename: "Zombie.mp3", duration: 308 },
+                    { filename: "WeWillRockYou.mp3", duration: 122 },
+                    { filename: "(Nendest)NarkootikumidestEiTeaMe(Küll)Midagi.mp3", duration: 169 },
+                    { filename: "Low.mp3", duration: 230 },
+                    { filename: "Luchtballon.mp3", duration: 136 },
+                    { filename: "ILoveRock NRoll.mp3", duration: 174 },
+                    { filename: "Huzzah!.mp3", duration: 113 },
+                    { filename: "Human.mp3", duration: 196 },
+                    { filename: "Popular.mp3", duration: 215 },
+                    { filename: "HighestInTheRoom.mp3", duration: 177 },
+                    { filename: "ThriftShop.mp3", duration: 243 },
+                    { filename: "Heathens.mp3", duration: 194 },
+                    { filename: "IWonder.mp3", duration: 243 },
+                    { filename: "AnotherOneBitesTheDust.mp3", duration: 214 },
+                    { filename: "Europapa.mp3", duration: 160 },
+                    { filename: "ChaChaCha.mp3", duration: 176 },
+                    { filename: "Thunder.mp3", duration: 183 },
+                    { filename: "TheHills.mp3", duration: 242 },
+                    { filename: "Redrum.mp3", duration: 272 },
+                    { filename: "IKilledYou.mp3", duration: 168 },
+                    { filename: "RahTahTah.mp3", duration: 166 },
+                    { filename: "St.Chroma.mp3", duration: 197 },
+                    { filename: "Sandstorm.mp3", duration: 232 },
+                    { filename: "AllMyFellas.mp3", duration: 141 },
+                    { filename: "Ackrite.mp3", duration: 220 },
+                    { filename: "24KMagic.mp3", duration: 226 },
+                    { filename: "FE!N.mp3", duration: 193 },
+                    { filename: "Tremor.mp3", duration: 294 },
+                    { filename: "Trafik!.mp3", duration: 133 },
+                    { filename: "Houdini.mp3", duration: 227 },
+                    // …for each MP3 you have in the /music folder…
                 ];
 
                 // ─── 2) FIXED EPOCH ("RADIO STARTED" UTC millis) ─────────────────────

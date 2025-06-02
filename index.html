@@ -58,7 +58,7 @@
         .marquee-text {
             display: inline-block;
             animation: marquee 13 linear infinite;
-            padding-left: 100%;
+            padding-left: 50%;
         }
 
             /* Only apply marquee if text is too long */
@@ -738,13 +738,9 @@
 
             // MISSING FUNCTION - Add marquee effect for long titles
             updateMarqueeEffect(title) {
-                const marqueeText = this.songTitleEl;
-                if (title.length > 25) { // If title is long
-                    marqueeText.classList.remove('short');
-                } else {
-                    marqueeText.classList.add('short');
-                }
+                this.songTitleEl.classList.remove('short');
             }
+
 
             nextSong() {
                 this.currentIndex++;
